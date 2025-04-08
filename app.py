@@ -5,7 +5,7 @@ from models.modelos_ventas import gestionar_ventas
 
 # Ventana Principal de Navegación
 def main():
-    st.title("Sistema de Barbaros Shop")
+    st.title("Sistema de + Flow BarberShop")
     st.sidebar.title("Menú")
     opciones = ["Inicio", "Clientes", "Servicios", "Ventas", "Reportes"]
     seleccion = st.sidebar.radio("Selecciona una opción:", opciones)
