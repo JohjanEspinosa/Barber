@@ -3,4 +3,3 @@ python_bcrypt==0.3.2
 pytz==2024.1
 SQLAlchemy==2.0.37
 streamlit==1.41.1
-bcrypt
