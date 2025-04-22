@@ -27,7 +27,7 @@ def crear_usuario(nombre, email, password):
         session.close()
         return False, "Ya existe un usuario con este correo electrónico."
     hashed_password = hash_password(password)
-    nuevo_usuario = Usuario(nombre=nombre, email=email, password=hashed_password, rol="admin")
+    nuevo_usuario = Usuario(nombre=nombre, email=email, password=hashed_password, rol="empleado")
     session.add(nuevo_usuario)
     session.commit()
     session.close()
@@ -52,7 +52,6 @@ class Cliente(Base):
 # Modelo de Servicio
 class Servicio(Base):
     __tablename__ = 'servicios'
-    __table_args__ = {'extend_existing': True}  # Evita el error si la tabla ya está definida
     id = Column(Integer, primary_key=True)
     nombre = Column(String, nullable=False)
     precio = Column(Float, nullable=False)

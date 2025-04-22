@@ -2,7 +2,6 @@ import streamlit as st
 from models.modelos_clientes import gestionar_clientes
 from models.modelos_servicios import gestionar_servicios
 from models.modelos_ventas import gestionar_ventas
-from database import crear_usuario
 from database import Session, Usuario, crear_usuario, verificar_usuario_con_rol
 
 def registrar_usuario():
