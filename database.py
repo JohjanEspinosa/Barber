@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
+import argon2
 import bcrypt
 
 # Crear la base de datos
@@ -10,37 +11,36 @@ engine = create_engine('sqlite:///barberia.db', echo=True)  # 'barberia.db' es e
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def hashear_password(password):
-    salt = bcrypt.gensalt()
-    hashed_password = bcrypt.hashpw(password.encode('utf-8'), salt)
-    return hashed_password.decode('utf-8')
+def hash_password(password):
+    ph = argon2.PasswordHasher()
+    return ph.hash(password)
 
-def crear_usuario(nombre, email, password, rol='empleado'):
-    session = Session()
-    existing_user = session.query(Usuario).filter(Usuario.email == email).first()
-    if existing_user:
-        session.close()
-        return False, "El correo electrónico ya está registrado."
+def verificar_password(password_ingresada, password_almacenada):
+    ph = argon2.PasswordHasher()
     try:
-        hashed_password = hashear_password(password)
-        nuevo_usuario = Usuario(nombre=nombre, email=email, password=hashed_password, rol=rol)
-        session.add(nuevo_usuario)
-        session.commit()
+        return ph.verify(password_almacenada, password_ingresada)
+    except argon2.exceptions.VerifyMismatchError:
+        return False
+
+def crear_usuario(nombre, email, password):
+    session = Session()
+    if session.query(Usuario).filter(Usuario.email == email).first():
         session.close()
-        return True, "Usuario creado exitosamente."
-    except Exception as e:
-        session.rollback()
-        session.close()
-        return False, f"Error al crear el usuario: {e}"
-    
+        return False, "Ya existe un usuario con este correo electrónico."
+    hashed_password = hash_password(password)
+    nuevo_usuario = Usuario(nombre=nombre, email=email, password=hashed_password, rol="admin")
+    session.add(nuevo_usuario)
+    session.commit()
+    session.close()
+    return True, "Usuario registrado exitosamente."
+
 def verificar_usuario_con_rol(email, password):
-    """Verifica el usuario y devuelve el rol si la autenticación es exitosa."""
     session = Session()
     usuario = session.query(Usuario).filter(Usuario.email == email).first()
     session.close()
-    if usuario and bcrypt.checkpw(password.encode('utf-8'), usuario.password.encode('utf-8')):
+    if usuario and verificar_password(password, usuario.password):
         return True, usuario.rol
-    return False, None
+    return False
     
 # Modelo de Cliente
 class Cliente(Base):
