@@ -1,6 +1,5 @@
 argon2==0.1.10
 pandas==2.2.3
-python_bcrypt==0.3.2
 pytz==2024.1
 SQLAlchemy==2.0.37
 streamlit==1.41.1
