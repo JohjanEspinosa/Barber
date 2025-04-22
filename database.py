@@ -39,7 +39,7 @@ def verificar_usuario_con_rol(email, password):
     session.close()
     if usuario and verificar_password(password, usuario.password):
         return True, usuario.rol
-    return False
+    return False, None
     
 # Modelo de Cliente
 class Cliente(Base):

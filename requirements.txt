@@ -1,4 +1,4 @@
-argon2==0.1.10
+argon2-cffi==21.3.0
 pandas==2.2.3
 pytz==2024.1
 SQLAlchemy==2.0.37
