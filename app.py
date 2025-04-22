@@ -3,20 +3,8 @@ from models.modelos_clientes import gestionar_clientes
 from models.modelos_servicios import gestionar_servicios
 from models.modelos_ventas import gestionar_ventas
 from database import crear_usuario
-import hashlib
 import bcrypt
 from database import Session, Usuario, crear_usuario, verificar_usuario_con_rol
-
-def verificar_password(password_ingresada, password_almacenada):
-    return bcrypt.checkpw(password_ingresada.encode('utf-8'), password_almacenada.encode('utf-8'))
-
-def verificar_usuario(email, password):
-    session = Session()
-    usuario = session.query(Usuario).filter(Usuario.email == email).first()
-    session.close()
-    if usuario:
-        return verificar_password(password, usuario.password)
-    return False
 
 def registrar_usuario():
     nombre_registro = st.session_state.get("nombre_registro", "")
